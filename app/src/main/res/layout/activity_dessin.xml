@@ -20,6 +20,10 @@
             android:layout_gravity="center_horizontal"
             android:text="Choisir un outil"
             android:onClick="ouvrirOutils"/>
+        <fr.lucas.dessinmobileapp.ZoneDessin
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewDessin"/>
     </FrameLayout>
 
     <!-- Partie outils -->
