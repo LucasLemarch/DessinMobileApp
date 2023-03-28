@@ -25,6 +25,12 @@ import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
 
 public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbilWarnaListener
 {
+	// constantes
+	public static String BUNDLE_OUTIL = "bundleOutil";
+	public static String BUNDLE_COULEUR = "bundleCouleur";
+	public static String BUNDLE_EST_PLEIN = "bundleEstPlein";
+	public static String BUNDLE_LST_COULEURS = "bundleLstCouleurs";
+
 	// composants xml
 	private DrawerLayout layoutOutils;
 	private GridLayout grilleCoul;
@@ -75,8 +81,6 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 
 			grilleCoul.addView(tabBtnCoul[i]);
 		}
-		affecterCouleurs();
-
 
 		btnAjoutCoul = new Button(this);
 		btnAjoutCoul.setText("+");
@@ -85,77 +89,37 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 
 		grilleCoul.addView(btnAjoutCoul);
 
-
+		majIHM();
 	}
 
+	public void onSaveInstanceState(Bundle b) {
+		b.putInt(Dessin.BUNDLE_OUTIL, outilSelect);
+		b.putInt(Dessin.BUNDLE_COULEUR, coulSelect);
+		b.putBoolean(Dessin.BUNDLE_EST_PLEIN, cbPlein.isChecked());
+		b.putIntegerArrayList(Dessin.BUNDLE_LST_COULEURS, alCoul);
 
-	// ouverture menu
-	public void ouvrirOutils(View v) {
-		layoutOutils.open();
+		super.onSaveInstanceState(b);
 	}
 
-	public void fermerOutils(View v) {
-		layoutOutils.close();
+	public void onRestoreInstanceState(Bundle b) {
+		super.onRestoreInstanceState(b);
+
+		outilSelect = b.getInt(Dessin.BUNDLE_OUTIL);
+		coulSelect = b.getInt(Dessin.BUNDLE_COULEUR);
+		cbPlein.setChecked(b.getBoolean(Dessin.BUNDLE_EST_PLEIN));
+		alCoul = b.getIntegerArrayList(Dessin.BUNDLE_LST_COULEURS);
+		majIHM();
 	}
 
-	// couleurs
-	private void affecterCouleurs() {
+	private void majIHM() {
+		// maj palette couleurs
 		for (int i = 0 ; i < alCoul.size() ; i++)
 			tabBtnCoul[i].setBackgroundTintList(ColorStateList.valueOf(alCoul.get(i)));
-	}
 
-	public void onOk(AmbilWarnaDialog dialog, int color) {
-		if (alCoul.size() < NB_BTN_COUL) {
-			tabBtnCoul[alCoul.size()].setBackgroundTintList(ColorStateList.valueOf(color));
-			alCoul.add(color);
-		}
-		else {
-			alCoul.remove(0);
-			alCoul.add(color);
-			affecterCouleurs();
-		}
-	}
+		// maj couleur selectionné
+		coulActuel.setBackgroundColor(alCoul.get(coulSelect));
 
-	public void onCancel(AmbilWarnaDialog dialog) {
-		Toast.makeText(this, "Aucune couleur séléctionné", Toast.LENGTH_SHORT).show();
-	}
-
-	public void onClick(View view) {
-		if (view == btnAjoutCoul)
-			colorChooser.show();
-
-		for (int i = 0 ; i < NB_BTN_COUL ; i++)
-			if (view == tabBtnCoul[i] && i < alCoul.size()) {
-				coulSelect = i;
-				coulActuel.setBackgroundColor(alCoul.get(i));
-			}
-	}
-
-	// outils
-	public void selectionnerLigne(View view) {
-		imgActuel.setImageResource(R.drawable.ligne);
-		outilSelect = Outils.LIGNE;
-	}
-
-	public void selectionnerCarre(View view) {
-		if (cbPlein.isChecked())
-			imgActuel.setImageResource(R.drawable.carre_rempli);
-		else
-			imgActuel.setImageResource(R.drawable.carre);
-
-		outilSelect = Outils.CARRE;
-	}
-
-	public void selectionnerCercle(View view) {
-		if (cbPlein.isChecked())
-			imgActuel.setImageResource(R.drawable.cercle_rempli);
-		else
-			imgActuel.setImageResource(R.drawable.cercle);
-
-		outilSelect = Outils.CERCLE;
-	}
-
-	public void changementPlein(View view) {
+		// maj outils
 		if (cbPlein.isChecked()) {
 			btnCarre.setImageResource(R.drawable.carre_rempli);
 			btnCercle.setImageResource(R.drawable.cercle_rempli);
@@ -170,6 +134,65 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 			if (outilSelect == Outils.CARRE) imgActuel.setImageResource(R.drawable.carre);
 			if (outilSelect == Outils.CERCLE) imgActuel.setImageResource(R.drawable.cercle);
 		}
+	}
+
+	// ouverture menu
+	public void ouvrirOutils(View v) {
+		layoutOutils.open();
+	}
+
+	public void fermerOutils(View v) {
+		layoutOutils.close();
+	}
+
+	// couleurs
+	public void onOk(AmbilWarnaDialog dialog, int color) {
+		if (alCoul.size() < NB_BTN_COUL) {
+			tabBtnCoul[alCoul.size()].setBackgroundTintList(ColorStateList.valueOf(color));
+			alCoul.add(color);
+		}
+		else {
+			alCoul.remove(0);
+			alCoul.add(color);
+		}
+
+		coulSelect = alCoul.indexOf(color);
+		majIHM();
+	}
+
+	public void onCancel(AmbilWarnaDialog dialog) {
+		Toast.makeText(this, "Aucune couleur séléctionné", Toast.LENGTH_SHORT).show();
+	}
+
+	public void onClick(View view) {
+		if (view == btnAjoutCoul)
+			colorChooser.show();
+
+		for (int i = 0 ; i < NB_BTN_COUL ; i++)
+			if (view == tabBtnCoul[i] && i < alCoul.size())
+				coulSelect = i;
+
+		majIHM();
+	}
+
+	// outils
+	public void selectionnerLigne(View view) {
+		imgActuel.setImageResource(R.drawable.ligne);
+		outilSelect = Outils.LIGNE;
+	}
+
+	public void selectionnerCarre(View view) {
+		outilSelect = Outils.CARRE;
+		majIHM();
+	}
+
+	public void selectionnerCercle(View view) {
+		outilSelect = Outils.CERCLE;
+		majIHM();
+	}
+
+	public void changementPlein(View view) {
+		majIHM();
 	}
 
 	public void retour(View view) {
