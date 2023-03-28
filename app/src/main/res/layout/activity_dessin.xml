@@ -48,6 +48,10 @@
                 android:scaleType="centerInside"
                 android:background="@null"
                 android:id="@+id/imageActuel"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Couleur actuel : "/>
             <View
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -106,26 +110,33 @@
                     android:layout_height="50dp"
                     android:src="@drawable/ligne"
                     android:scaleType="centerInside"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:onClick="selectionnerLigne"/>
                 <ImageButton
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/carre"
                     android:scaleType="centerInside"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:onClick="selectionnerCarre"
+                    android:id="@+id/btnCarre"/>
                 <ImageButton
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/cercle"
                     android:scaleType="centerInside"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:onClick="selectionnerCercle"
+                    android:id="@+id/btnCercle"/>
             </LinearLayout>
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="remplir"/>
+                android:text="remplir"
+                android:onClick="changementPlein"
+                android:id="@+id/cbPlein"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,13 +149,15 @@
                     android:layout_height="50dp"
                     android:src="@drawable/retour"
                     android:scaleType="centerInside"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:onClick="retour"/>
                 <ImageButton
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/effacer"
                     android:scaleType="centerInside"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:onClick="effacer"/>
             </LinearLayout>
         </LinearLayout>
 

@@ -1,22 +1,19 @@
 package fr.lucas.dessinmobileapp;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -32,6 +29,10 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 	private DrawerLayout layoutOutils;
 	private GridLayout grilleCoul;
 	private View coulActuel;
+	private ImageView imgActuel;
+	private ImageButton btnCarre;
+	private ImageButton btnCercle;
+	private CheckBox cbPlein;
 
 	// gestion des couleurs
 	private final int NB_BTN_COUL = 9;
@@ -41,8 +42,8 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 	private Button btnAjoutCoul;
 	private int coulSelect;
 
-
-
+	// gestion outils
+	private int outilSelect;
 
 
 	@Override
@@ -53,10 +54,15 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		layoutOutils = findViewById(R.id.choixOutils);
 		grilleCoul = findViewById(R.id.grilleCouleurs);
 		coulActuel = findViewById(R.id.couleurActuel);
+		imgActuel = findViewById(R.id.imageActuel);
+		btnCarre = findViewById(R.id.btnCarre);
+		btnCercle = findViewById(R.id.btnCercle);
+		cbPlein = findViewById(R.id.cbPlein);
 
 		colorChooser = new AmbilWarnaDialog(this, 0, this);
 		alCoul = new ArrayList<Integer>(Arrays.asList(Color.BLACK, Color.WHITE, Color.RED, Color.GREEN, Color.BLUE));
 		coulSelect = 0;
+		outilSelect = Outils.LIGNE;
 
 		// Création des composants
 		LayoutParams param = new LayoutParams(150, 150);
@@ -92,7 +98,7 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		layoutOutils.close();
 	}
 
-	// liste couleurs
+	// couleurs
 	private void affecterCouleurs() {
 		for (int i = 0 ; i < alCoul.size() ; i++)
 			tabBtnCoul[i].setBackgroundTintList(ColorStateList.valueOf(alCoul.get(i)));
@@ -114,10 +120,6 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		Toast.makeText(this, "Aucune couleur séléctionné", Toast.LENGTH_SHORT).show();
 	}
 
-
-
-
-	@Override
 	public void onClick(View view) {
 		if (view == btnAjoutCoul)
 			colorChooser.show();
@@ -126,7 +128,55 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 			if (view == tabBtnCoul[i] && i < alCoul.size()) {
 				coulSelect = i;
 				coulActuel.setBackgroundColor(alCoul.get(i));
-				Toast.makeText(this, "couleur : " + i, Toast.LENGTH_SHORT).show();
 			}
+	}
+
+	// outils
+	public void selectionnerLigne(View view) {
+		imgActuel.setImageResource(R.drawable.ligne);
+		outilSelect = Outils.LIGNE;
+	}
+
+	public void selectionnerCarre(View view) {
+		if (cbPlein.isChecked())
+			imgActuel.setImageResource(R.drawable.carre_rempli);
+		else
+			imgActuel.setImageResource(R.drawable.carre);
+
+		outilSelect = Outils.CARRE;
+	}
+
+	public void selectionnerCercle(View view) {
+		if (cbPlein.isChecked())
+			imgActuel.setImageResource(R.drawable.cercle_rempli);
+		else
+			imgActuel.setImageResource(R.drawable.cercle);
+
+		outilSelect = Outils.CERCLE;
+	}
+
+	public void changementPlein(View view) {
+		if (cbPlein.isChecked()) {
+			btnCarre.setImageResource(R.drawable.carre_rempli);
+			btnCercle.setImageResource(R.drawable.cercle_rempli);
+
+			if (outilSelect == Outils.CARRE) imgActuel.setImageResource(R.drawable.carre_rempli);
+			if (outilSelect == Outils.CERCLE) imgActuel.setImageResource(R.drawable.cercle_rempli);
+		}
+		else {
+			btnCarre.setImageResource(R.drawable.carre);
+			btnCercle.setImageResource(R.drawable.cercle);
+
+			if (outilSelect == Outils.CARRE) imgActuel.setImageResource(R.drawable.carre);
+			if (outilSelect == Outils.CERCLE) imgActuel.setImageResource(R.drawable.cercle);
+		}
+	}
+
+	public void retour(View view) {
+		//TODO
+	}
+
+	public void effacer(View view) {
+		//TODO
 	}
 }
