@@ -6,6 +6,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,7 +34,8 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 	public static final String BUNDLE_COULEUR = "bundleCouleur";
 	public static final String BUNDLE_EST_PLEIN = "bundleEstPlein";
 	public static final String BUNDLE_LST_COULEURS = "bundleLstCouleurs";
-	public static final String BUNDLE_LST_FORMES = "bundleLstFormes";
+	public static final String BUNDLE_DESSIN_ACTUEL = "bundleDessinActuel";
+	public static final String BUNDLE_EXTRA_DESSIN_ACTUEL = "bundleExtraDessinActuel";
 
 	// composants xml
 	private DrawerLayout layoutOutils;
@@ -104,7 +106,7 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		b.putInt(Dessin.BUNDLE_COULEUR, coulSelect);
 		b.putBoolean(Dessin.BUNDLE_EST_PLEIN, cbPlein.isChecked());
 		b.putIntegerArrayList(Dessin.BUNDLE_LST_COULEURS, alCoul);
-		b.putStringArrayList(Dessin.BUNDLE_LST_FORMES, viewDessin.sauvegarderFormes());
+		b.putString(Dessin.BUNDLE_DESSIN_ACTUEL, viewDessin.sauvegarderDessinActuel());
 
 		super.onSaveInstanceState(b);
 	}
@@ -116,8 +118,17 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		coulSelect = b.getInt(Dessin.BUNDLE_COULEUR);
 		cbPlein.setChecked(b.getBoolean(Dessin.BUNDLE_EST_PLEIN));
 		alCoul = b.getIntegerArrayList(Dessin.BUNDLE_LST_COULEURS);
-		viewDessin.chargerFormes(b.getStringArrayList(Dessin.BUNDLE_LST_FORMES));
+		viewDessin.chargerDessinActuel(b.getString(Dessin.BUNDLE_DESSIN_ACTUEL));
 		majIHM();
+	}
+
+	public void onDestroy() {
+		super.onDestroy();
+
+		Intent intent = new Intent();
+		intent.putExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL, viewDessin.sauvegarderDessinActuel());
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 
 	public int getOutilSelect() { return outilSelect; }

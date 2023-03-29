@@ -36,32 +36,33 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
         formeEnCours = null;
         pointDepart = null;
 
-        llFormes.add(new FormeLigne(50, 50, 300, 300, Color.BLUE));
+        /*llFormes.add(new FormeLigne(50, 50, 300, 300, Color.BLUE));
         llFormes.add(new FormeCarre(50, 250, 300, 300, Color.BLUE, true));
         llFormes.add(new FormeCarre(550, 700, 300, 500, Color.RED, false));
         llFormes.add(new FormeCercle(800, 800, 50, Color.GREEN, false));
-        llFormes.add(new FormeCercle(500, 500, 25, Color.YELLOW, true));
+        llFormes.add(new FormeCercle(500, 500, 25, Color.YELLOW, true));*/
 
         this.setOnTouchListener(this);
         this.setOnClickListener(this);
     }
 
-    public ArrayList<String> sauvegarderFormes() {
+    public String sauvegarderDessinActuel() {
         Forme forme;
-        ArrayList<String> alFormesString = new ArrayList<String>();
+        String dessinActuel = "";
         Iterator<Forme> itFormes = llFormes.iterator();
 
         while(itFormes.hasNext()) {
             forme = itFormes.next();
-            alFormesString.add(forme.toString());
+            dessinActuel += forme.toString() + "\n";
         }
 
-        return alFormesString;
+        return dessinActuel;
     }
 
-    public void chargerFormes(ArrayList<String> alFormesString) {
-        for (String s : alFormesString) {
-            String[] tabS = s.split(";");
+    public void chargerDessinActuel(String dessinActuel) {
+        String[] tabDessinActuel = dessinActuel.split("\n");
+        for (String ligne : tabDessinActuel) {
+            String[] tabS = ligne.split(";");
 
             switch (Integer.parseInt(tabS[0])) {
                 case Outils.LIGNE:
