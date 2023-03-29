@@ -3,6 +3,9 @@ package fr.lucas.dessinmobileapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -27,10 +29,11 @@ import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
 public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbilWarnaListener
 {
 	// constantes
-	public static String BUNDLE_OUTIL = "bundleOutil";
-	public static String BUNDLE_COULEUR = "bundleCouleur";
-	public static String BUNDLE_EST_PLEIN = "bundleEstPlein";
-	public static String BUNDLE_LST_COULEURS = "bundleLstCouleurs";
+	public static final String BUNDLE_OUTIL = "bundleOutil";
+	public static final String BUNDLE_COULEUR = "bundleCouleur";
+	public static final String BUNDLE_EST_PLEIN = "bundleEstPlein";
+	public static final String BUNDLE_LST_COULEURS = "bundleLstCouleurs";
+	public static final String BUNDLE_LST_FORMES = "bundleLstFormes";
 
 	// composants xml
 	private DrawerLayout layoutOutils;
@@ -40,6 +43,7 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 	private ImageButton btnCarre;
 	private ImageButton btnCercle;
 	private CheckBox cbPlein;
+	private ZoneDessin viewDessin;
 
 	// gestion des couleurs
 	private final int NB_BTN_COUL = 9;
@@ -65,11 +69,13 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		btnCarre = findViewById(R.id.btnCarre);
 		btnCercle = findViewById(R.id.btnCercle);
 		cbPlein = findViewById(R.id.cbPlein);
+		viewDessin = findViewById(R.id.viewDessin);
 
 		colorChooser = new AmbilWarnaDialog(this, 0, this);
 		alCoul = new ArrayList<Integer>(Arrays.asList(Color.BLACK, Color.WHITE, Color.RED, Color.GREEN, Color.BLUE));
 		coulSelect = 0;
 		outilSelect = Outils.LIGNE;
+
 
 		// Création des composants
 		LayoutParams param = new LayoutParams(150, 150);
@@ -98,6 +104,7 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		b.putInt(Dessin.BUNDLE_COULEUR, coulSelect);
 		b.putBoolean(Dessin.BUNDLE_EST_PLEIN, cbPlein.isChecked());
 		b.putIntegerArrayList(Dessin.BUNDLE_LST_COULEURS, alCoul);
+		b.putStringArrayList(Dessin.BUNDLE_LST_FORMES, viewDessin.sauvegarderFormes());
 
 		super.onSaveInstanceState(b);
 	}
@@ -109,8 +116,13 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		coulSelect = b.getInt(Dessin.BUNDLE_COULEUR);
 		cbPlein.setChecked(b.getBoolean(Dessin.BUNDLE_EST_PLEIN));
 		alCoul = b.getIntegerArrayList(Dessin.BUNDLE_LST_COULEURS);
+		viewDessin.chargerFormes(b.getStringArrayList(Dessin.BUNDLE_LST_FORMES));
 		majIHM();
 	}
+
+	public int getOutilSelect() { return outilSelect; }
+	public int getCoul() { return alCoul.get(coulSelect); }
+	public boolean getEstPlein() { return cbPlein.isChecked(); }
 
 	private void majIHM() {
 		// maj palette couleurs
@@ -197,10 +209,23 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 	}
 
 	public void retour(View view) {
-		//TODO
+		if (!viewDessin.retour())
+			Toast.makeText(this, "Votre dessin est déjà vide", Toast.LENGTH_SHORT).show();
 	}
 
 	public void effacer(View view) {
-		//TODO
+		// Création d'un popup
+		Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Etes-vous sûr de vouloir tout effacer ?");
+		builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				viewDessin.effacer();
+			}
+		});
+		builder.setNegativeButton("Non", null);
+
+		// Afficher la popup
+		builder.show();
 	}
 }
