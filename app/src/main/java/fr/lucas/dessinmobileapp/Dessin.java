@@ -64,6 +64,8 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dessin);
 
+
+
 		layoutOutils = findViewById(R.id.choixOutils);
 		grilleCoul = findViewById(R.id.grilleCouleurs);
 		coulActuel = findViewById(R.id.couleurActuel);
@@ -72,6 +74,9 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		btnCercle = findViewById(R.id.btnCercle);
 		cbPlein = findViewById(R.id.cbPlein);
 		viewDessin = findViewById(R.id.viewDessin);
+
+		String test = this.getIntent().getStringExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL);
+		viewDessin.chargerDessinActuel(test);
 
 		colorChooser = new AmbilWarnaDialog(this, 0, this);
 		alCoul = new ArrayList<Integer>(Arrays.asList(Color.BLACK, Color.WHITE, Color.RED, Color.GREEN, Color.BLUE));
@@ -122,13 +127,24 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		majIHM();
 	}
 
-	public void onDestroy() {
-		super.onDestroy();
-
-		Intent intent = new Intent();
-		intent.putExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL, viewDessin.sauvegarderDessinActuel());
-		setResult(RESULT_OK, intent);
-		finish();
+	@Override
+	public void onBackPressed() {
+		if (layoutOutils.isOpen())
+			layoutOutils.close();
+		else
+			new AlertDialog.Builder(this)
+					.setMessage("Voulez-vous vraiment quitter l'application ?")
+					.setCancelable(false)
+					.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							Intent intent = new Intent();
+							intent.putExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL, viewDessin.sauvegarderDessinActuel());
+							Dessin.this.setResult(RESULT_OK, intent);
+							Dessin.this.finish();
+						}
+					})
+					.setNegativeButton("Non", null)
+					.show();
 	}
 
 	public int getOutilSelect() { return outilSelect; }
@@ -239,4 +255,6 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		// Afficher la popup
 		builder.show();
 	}
+
+
 }

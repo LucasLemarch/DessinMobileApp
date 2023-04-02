@@ -64,16 +64,17 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
         for (String ligne : tabDessinActuel) {
             String[] tabS = ligne.split(";");
 
-            switch (Integer.parseInt(tabS[0])) {
-                case Outils.LIGNE:
-                    llFormes.add(new FormeLigne(tabS));
-                    break;
-                case Outils.CARRE:
-                    llFormes.add(new FormeCarre(tabS));
-                    break;
-                case Outils.CERCLE:
-                    llFormes.add(new FormeCercle(tabS));
-                    break;
+            if (tabS.length > 1)
+                switch (Integer.parseInt(tabS[0])) {
+                    case Outils.LIGNE:
+                        llFormes.add(new FormeLigne(tabS));
+                        break;
+                    case Outils.CARRE:
+                        llFormes.add(new FormeCarre(tabS));
+                        break;
+                    case Outils.CERCLE:
+                        llFormes.add(new FormeCercle(tabS));
+                        break;
             }
         }
     }
