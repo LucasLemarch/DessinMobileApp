@@ -95,8 +95,12 @@ public class Dessin extends AppCompatActivity implements OnClickListener, OnAmbi
 		viewDessin = findViewById(R.id.viewDessin);
 
 		// Récupératon et chargement du dessin envoyé par l'Accueil
-		String test = this.getIntent().getStringExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL);
-		viewDessin.chargerDessinActuel(test);
+		String dessinACharger = this.getIntent().getStringExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL);
+
+		if (!dessinACharger.equals("")) { //si dessin recup => chargment + suppression des données
+			this.getIntent().putExtra(Dessin.BUNDLE_EXTRA_DESSIN_ACTUEL, "");
+			viewDessin.chargerDessinActuel(dessinACharger);
+		}
 
 		// Assimilation des valeurs par défault
 		alCoul = new ArrayList<Integer>(Arrays.asList(Color.BLACK, Color.WHITE, Color.RED, Color.GREEN, Color.BLUE));

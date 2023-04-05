@@ -30,7 +30,7 @@ public class Accueil extends AppCompatActivity {
 		setContentView(R.layout.activity_accueil);
 
 		// Récupération du dernier dessin enregistré dans les SharedPreferences ou une chaine vide
-		dessinActuel = getSharedPreferences(Accueil.SHARED_PREF_INFO, MODE_PRIVATE)
+		dessinActuel = this.getSharedPreferences(Accueil.SHARED_PREF_INFO, MODE_PRIVATE)
 				.getString(Accueil.SHARED_PREF_INFO_DESSIN_ACTUEL, "");
 	}
 

@@ -107,10 +107,13 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
         // dessin des formes enregistrer
         Forme forme;
         Iterator<Forme> itFormes = llFormes.iterator();
+        int i = 0;
         while(itFormes.hasNext()) {
             forme = itFormes.next();
             forme.dessiner(canvas);
+            i++;
         }
+        System.out.println("NB FORMES : " + i);
 
         // dessin de la forme en cours de création si elle existe
         if (formeEnCours != null)
