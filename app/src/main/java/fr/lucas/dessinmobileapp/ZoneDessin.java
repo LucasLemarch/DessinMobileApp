@@ -152,14 +152,16 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
     @Override
     public void onClick(View view) {
         // on place la forme dessiné dans la liste de forme
-        try {
-            llFormes.add((Forme) formeEnCours.clone());
-        } catch (CloneNotSupportedException e) {
-            System.out.println("Erreur lors du clonage");
-        }
+        if (formeEnCours != null) {
+            try {
+                llFormes.add((Forme) formeEnCours.clone());
+            } catch (CloneNotSupportedException e) {
+                System.out.println("Erreur lors du clonage");
+            }
 
-        formeEnCours = null;
-        pointDepart = null;
-        this.invalidate();
+            formeEnCours = null;
+            pointDepart = null;
+            this.invalidate();
+        }
     }
 }
