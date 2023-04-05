@@ -21,31 +21,38 @@ import fr.lucas.dessinmobileapp.formes.FormeLigne;
 
 public class ZoneDessin extends View implements OnTouchListener, OnClickListener
 {
+    // Activité Dessin pour les getters
     private Dessin dessin;
+    // Liste des formes déssinés
     private LinkedList<Forme> llFormes;
+    // Forme en train d'être dessiné
     private Forme formeEnCours;
+    // Point de départ de la forme en train d'être déssiné
     private Point pointDepart;
+    // Valeur x enregistré par le touch listener
     private float x;
+    // Valeur y enregistré par le touch listener
     private float y;
 
     public ZoneDessin(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        // Récupération de Dessin
         dessin = (Dessin) context;
+
+        // Initialisation de la liste des formes
         llFormes = new LinkedList<Forme>();
+
+        // Initialisation des variables pour la forme en train d'être dessiné
         formeEnCours = null;
         pointDepart = null;
 
-        /*llFormes.add(new FormeLigne(50, 50, 300, 300, Color.BLUE));
-        llFormes.add(new FormeCarre(50, 250, 300, 300, Color.BLUE, true));
-        llFormes.add(new FormeCarre(550, 700, 300, 500, Color.RED, false));
-        llFormes.add(new FormeCercle(800, 800, 50, Color.GREEN, false));
-        llFormes.add(new FormeCercle(500, 500, 25, Color.YELLOW, true));*/
-
+        // Ajout des listeners
         this.setOnTouchListener(this);
         this.setOnClickListener(this);
     }
 
+    // Transforme la liste des formes en String
     public String sauvegarderDessinActuel() {
         Forme forme;
         String dessinActuel = "";
@@ -59,6 +66,7 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
         return dessinActuel;
     }
 
+    // Transforme un String donné en liste des formes
     public void chargerDessinActuel(String dessinActuel) {
         String[] tabDessinActuel = dessinActuel.split("\n");
         for (String ligne : tabDessinActuel) {
@@ -79,6 +87,7 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
         }
     }
 
+    // Permet de supprimer la dernière forme dessiné
     public boolean retour() {
         if (llFormes.isEmpty())
             return false;
@@ -88,6 +97,7 @@ public class ZoneDessin extends View implements OnTouchListener, OnClickListener
         return true;
     }
 
+    // Permet d'effacer toutes les formes dessiné
     public void effacer() {
         llFormes.clear();
         this.invalidate();
